@@ -1,7 +1,5 @@
-import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import React, { useEffect, useState } from "react";
-import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
-import useStore from "../../../../components/context/useStore";
+import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import {
   DocumentHandler,
   MainPagesFooterPart,
@@ -9,6 +7,8 @@ import {
   NoDataFount,
   PageInfo,
 } from "../../../../components/admin/common/common";
+import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
+import useStore from "../../../../components/context/useStore";
 
 const DBrand = () => {
   const [showAction, setShowAction] = useState(-1);
@@ -60,16 +60,16 @@ const DBrand = () => {
 
   return (
     <DashboardLayout>
-      <div className="dashboard-home-container">
-        <PageInfo title="Brand" type="View" />
+      <div className='dashboard-home-container'>
+        <PageInfo title='Brand' type='View' />
 
-        <div className="container">
+        <div className='container'>
           <MainPagesTopPart
-            addLink="/admin/home/brand/adbrand"
+            addLink='/admin/home/brand/adbrand'
             setLimit={setLimit}
           />
 
-          <div className="table-container">
+          <div className='table-container'>
             <table>
               <thead>
                 <tr>
@@ -90,7 +90,7 @@ const DBrand = () => {
                             i % 2 === 0 ? "bg-[#f1f1f1]" : "bg-[#f9f9f9]"
                           }`}
                         >
-                          <div className="flex items-center gap-1">
+                          <div className='flex items-center gap-1'>
                             {showAction !== i ? (
                               <HiPlusCircle />
                             ) : (
@@ -99,13 +99,13 @@ const DBrand = () => {
                             <span>{item.id}</span>
                           </div>
                         </td>
-                        <td>{item.category_name}</td>
+                        <td>{item.category}</td>
                         <td>{item.name}</td>
                         <td>
                           <img
-                            className="h-5"
+                            className='h-5'
                             src={`/assets/${item.image}`}
-                            alt=""
+                            alt=''
                           />
                         </td>
                       </tr>

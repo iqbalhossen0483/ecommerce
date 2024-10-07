@@ -1,6 +1,6 @@
-import useStore from "../components/context/useStore";
-import React, { useRef, useState } from "react";
 import { useRouter } from "next/router";
+import React, { useRef, useState } from "react";
+import useStore from "../components/context/useStore";
 // import dynamic from "next/dynamic";
 // const SocialLogin = dynamic(
 //   () => import("../components/admin/socialLogin/SocialLogin"),
@@ -158,7 +158,7 @@ const Login = () => {
               type='submit'
               className='btn active w-full'
             >
-              {login ? "Sign in" : "Sign up"}
+              {loading ? "Loading..." : login ? "Sign in" : "Sign up"}
             </button>
           </div>
         </form>
@@ -177,7 +177,7 @@ const Login = () => {
             type='button'
             className='text-[#17A2B8]'
           >
-            {login ? " Sign Up" : "Login"}
+            {loading ? "Loading..." : login ? " Sign Up" : "Login"}
           </button>
         </div>
       </div>

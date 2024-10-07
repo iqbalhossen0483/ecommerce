@@ -1,7 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaHome, FaTrash } from "react-icons/fa";
 import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import {
   DocumentHandler,
@@ -11,7 +8,6 @@ import {
   PageInfo,
 } from "../../../../components/admin/common/common";
 import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
-import { menuAnimation } from "../../../../components/admin/components/SidebarMenu";
 import useStore from "../../../../components/context/useStore";
 
 const DBanner = () => {
@@ -65,22 +61,22 @@ const DBanner = () => {
 
   return (
     <DashboardLayout>
-      <div className="dashboard-home-container">
-        <PageInfo title="Baner" type="View" />
+      <div className='dashboard-home-container'>
+        <PageInfo title='Baner' type='View' />
 
-        <div className="container">
+        <div className='container'>
           <MainPagesTopPart
-            addLink="/admin/home/banner/adbanner"
+            addLink='/admin/home/banner/adbanner'
             setLimit={setLimit}
           />
 
-          <div className="table-container">
+          <div className='table-container'>
             <table>
               <thead>
                 <tr>
                   <td>ID</td>
-                  <td>CATEGORY</td>
-                  <td>SUB CATEGORY</td>
+                  <td>POSITION</td>
+                  <td>lINK</td>
                   <td>IMAGE</td>
                 </tr>
               </thead>
@@ -95,7 +91,7 @@ const DBanner = () => {
                             i % 2 === 0 ? "bg-[#f1f1f1]" : "bg-[#f9f9f9]"
                           }`}
                         >
-                          <div className="flex items-center gap-1">
+                          <div className='flex items-center gap-1'>
                             {showAction !== i ? (
                               <HiPlusCircle />
                             ) : (
@@ -104,13 +100,13 @@ const DBanner = () => {
                             <span>{item.id}</span>
                           </div>
                         </td>
-                        <td>{item.category_name}</td>
-                        <td>{item.sub_category_name}</td>
+                        <td>{item.position}</td>
+                        <td>{item.link}</td>
                         <td>
                           <img
-                            className="h-5"
+                            className='h-5'
                             src={`/assets/${item.image}`}
-                            alt=""
+                            alt=''
                           />
                         </td>
                       </tr>

@@ -16,9 +16,13 @@
   .btn:disabled {
     @apply bg-gray-200 text-white;
   }
-  input,
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
   textarea {
-    @apply outline-none px-4 py-2 rounded border focus:border-green-300 w-full;
+    @apply px-4 py-2 rounded border focus:border-green-300 w-full focus:outline-none;
   }
   input[type="file"] {
     @apply border-none px-0 file:rounded file:bg-[#18a3b8c3] file:text-white

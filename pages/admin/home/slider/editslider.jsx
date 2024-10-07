@@ -1,13 +1,13 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
-import Link from "next/link";
-import useStore from "../../../../components/context/useStore";
-import { useRouter } from "next/router";
 import { PageInfo } from "../../../../components/admin/common/common";
+import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
+import useStore from "../../../../components/context/useStore";
 
 const EditSlider = () => {
-  const { handleSubmit, register, reset } = useForm();
+  const { handleSubmit, register } = useForm();
   const [slider, setSlider] = useState(null);
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -65,55 +65,46 @@ const EditSlider = () => {
   return (
     <DashboardLayout>
       <section>
-        <PageInfo title="Slider" type="Edit" />
+        <PageInfo title='Slider' type='Edit' />
 
-        <div className="add-form">
+        <div className='add-form'>
           <form onSubmit={handleSubmit(onsubmit)}>
             <div>
-              <label>Category</label>
-              <select className="w-full" {...register("category_id")}>
-                <option value="">select</option>
-                {category &&
-                  category.length &&
-                  category.map((item) => (
-                    <option
-                      selected={item.id === slider?.category_id}
-                      key={item.id}
-                      value={item.id}
-                    >
-                      {item.name}
-                    </option>
-                  ))}
-              </select>
+              <label>Link</label>
+              <input
+                type='text'
+                {...register("link")}
+                defaultValue={slider?.link}
+              />
             </div>
-            <div className="edit-input-container">
+            <div className='edit-input-container'>
               <div>
                 <label style={{ marginLeft: 0, marginBottom: 0 }}>Image </label>
-                <input {...register("image")} type="file" />
+                <input {...register("image")} type='file' />
               </div>
               <div>
                 {slider?.image && (
                   <img
-                    className="h-20"
+                    className='h-20'
                     src={`/assets/${slider?.image}`}
-                    alt=""
+                    alt=''
                   />
                 )}
               </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <button
                 disabled={loading}
-                type="submit"
-                className="btn active text-sm"
+                type='submit'
+                className='btn active text-sm'
               >
                 UPDATE
               </button>
-              <Link href="/admin/home/slider">
+              <Link href='/admin/home/slider'>
                 <button
-                  type="button"
-                  className="btn text-sm"
+                  type='button'
+                  className='btn text-sm'
                   style={{ backgroundColor: "#dc3545", color: "#fff" }}
                 >
                   GO BACK

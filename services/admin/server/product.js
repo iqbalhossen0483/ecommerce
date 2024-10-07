@@ -21,7 +21,9 @@ function sendSpecifiqData(req, res, name, query) {
     sql = `SELECT * FROM product WHERE created_by = '${req.query.user_id}' AND user_type = '${req.query.user_type}' ORDER BY created_at DESC LIMIT ${page}, ${limit}`;
     count = `SELECT COUNT(id) FROM product WHERE created_by = '${req.query.user_id}' AND user_type = '${req.query.user_type}'`;
   } else {
-    sql = `SELECT * FROM product ORDER BY created_at DESC LIMIT ${page}, ${limit}`;
+    sql = `SELECT ${
+      req.query.opt || "*"
+    } FROM product ORDER BY created_at DESC LIMIT ${page}, ${limit}`;
     count = "SELECT COUNT(id) FROM product";
   }
   getDataFromDB(res, sql, count);
@@ -58,9 +60,8 @@ export function getProduct(req, res) {
 const ProductSchema = Joi.object({
   created_by: Joi.number().integer().required(),
   user_type: Joi.string().valid("vendor", "owner", "uploader").required(),
-  created_at: Joi.date().required(),
   name: Joi.string().required(),
-  brand: Joi.string().required(),
+  brand: Joi.number().integer(),
   sku: Joi.string().required(),
   price: Joi.number().required(),
   prev_price: Joi.number(),
@@ -68,13 +69,10 @@ const ProductSchema = Joi.object({
   stock: Joi.number().required(),
   keyword: Joi.string().required(),
   category_id: Joi.number().integer().required(),
-  category_name: Joi.string().required(),
   sub_category_id: Joi.number().integer(),
-  sub_category_name: Joi.string(),
   pro_sub_id: Joi.number().integer(),
-  pro_sub_name: Joi.string(),
-  short_description: Joi.string().required(),
-  description: Joi.string().required(),
+  short_description: Joi.string().required().max(200),
+  description: Joi.string().required().max(700),
   main_image: Joi.string().required(),
   features_img: Joi.string().required(),
   type: Joi.string().valid("single", "package").required(),
@@ -97,16 +95,15 @@ export async function postProduct(req, res) {
 
     //images;
     req.body.main_image = req.files.main_image[0].filename;
-    const features_img = [];
+    let features_img = "";
     req.files.features_img.forEach((img) => {
-      features_img.push(img.filename);
+      features_img += img.filename + "|";
     });
 
     await varifyUser(req.body.user_id, req.body.user_type);
 
     delete req.body.user_id;
-    req.body.created_at = new Date();
-    req.body.features_img = JSON.stringify(features_img);
+    req.body.features_img = features_img;
 
     //api validateion;
     const varify = ProductSchema.validate(req.body);
@@ -169,18 +166,22 @@ export async function updateProduct(req, res) {
     if (req.files.main_image) {
       req.body.main_image = req.files.main_image[0].filename;
     }
-    const features_img = [];
+
+    let features_img = "";
     if (req.files.features_img) {
       req.files.features_img.forEach((img) => {
-        features_img.push(img.filename);
+        features_img += img.filename + "|";
       });
     }
+
     if (req.body.needImage) {
-      features_img.push(...JSON.parse(req.body.needImage));
+      JSON.parse(req.body.needImage).forEach((img) => {
+        features_img += img + "|";
+      });
       delete req.body.needImage;
     }
     if (features_img.length) {
-      req.body.features_img = JSON.stringify(features_img);
+      req.body.features_img = features_img;
     }
 
     let deleteImg;

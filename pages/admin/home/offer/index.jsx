@@ -1,7 +1,5 @@
-import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
-import useStore from "../../../../components/context/useStore";
-import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import React, { useEffect, useState } from "react";
+import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import {
   DocumentHandler,
   MainPagesFooterPart,
@@ -9,6 +7,8 @@ import {
   NoDataFount,
   PageInfo,
 } from "../../../../components/admin/common/common";
+import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
+import useStore from "../../../../components/context/useStore";
 
 const DOffer = () => {
   const [showAction, setShowAction] = useState(-1);
@@ -61,22 +61,25 @@ const DOffer = () => {
 
   return (
     <DashboardLayout>
-      <div className="dashboard-home-container">
-        <PageInfo title="Special Offer" type="View" />
+      <div className='dashboard-home-container'>
+        <PageInfo title='Special Offer' type='View' />
 
-        <div className="container">
+        <div className='container'>
           <MainPagesTopPart
-            addLink="/admin/home/offer/adoffer"
+            addLink='/admin/home/offer/adoffer'
             setLimit={setLimit}
           />
 
-          <div className="table-container">
-            <table className="w-3/4 mx-auto">
-              <thead className="offer-header">
+          <div className='table-container'>
+            <table className='w-3/4 mx-auto'>
+              <thead className='offer-header'>
                 <tr>
                   <th>ID</th>
-                  <th className="col-span-2">Title</th>
+                  <th className='col-span-2'>Title</th>
                   <th>PIORITY</th>
+                  <th>SPECIFIQ PRODUCT</th>
+                  <th>SPECIFIQ CAETGORY</th>
+                  <th>ALL PRODUCT</th>
                   <th>IMAGE</th>
                 </tr>
               </thead>
@@ -91,7 +94,7 @@ const DOffer = () => {
                             i % 2 === 0 ? "bg-[#f1f1f1]" : "bg-[#f9f9f9]"
                           }`}
                         >
-                          <div className="flex items-center gap-1">
+                          <div className='flex items-center gap-1'>
                             {showAction !== i ? (
                               <HiPlusCircle />
                             ) : (
@@ -100,13 +103,26 @@ const DOffer = () => {
                             <span>{item.id}</span>
                           </div>
                         </td>
-                        <td className="col-span-2">{item.title}</td>
+                        <td className='col-span-2'>{item.title}</td>
                         <td>{item.priority}</td>
                         <td>
+                          {item.product ? (
+                            <img
+                              className='h-5'
+                              src={`/assets/${item.product_image}`}
+                              alt=''
+                            />
+                          ) : (
+                            "NO"
+                          )}
+                        </td>
+                        <td>{item.category ? item.category_name : "NO"}</td>
+                        <td>{item.all_product ? "Yes" : "NO"}</td>
+                        <td>
                           <img
-                            className="h-5"
+                            className='h-5'
                             src={`/assets/${item.image}`}
-                            alt=""
+                            alt=''
                           />
                         </td>
                       </tr>

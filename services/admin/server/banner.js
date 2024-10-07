@@ -31,10 +31,8 @@ export function getBanner(req, res) {
 }
 
 const bannerSchema = Joi.object({
-  category_id: Joi.number().integer().required(),
-  category_name: Joi.string().required(),
-  sub_category_id: Joi.number().integer(),
-  sub_category_name: Joi.string(),
+  position: Joi.string().required(),
+  link: Joi.string().required(),
   image: Joi.string().required(),
 });
 
@@ -54,7 +52,7 @@ export async function postBanner(req, res) {
     if (varify.error) throw { message: varify.error.message };
 
     const sql = "INSERT INTO banner SET ";
-    const result = await postDocument(sql);
+    const result = await postDocument(sql, req.body);
     if (result.insertId > 0) {
       res.send({ message: "Banner Added Successfully" });
     } else throw { message: "Unable to Added" };

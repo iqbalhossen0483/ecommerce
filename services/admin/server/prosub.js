@@ -11,7 +11,7 @@ export function getProSub(req, res) {
     } else if (req.query.home) {
       // send category for home category page;
       const page = parseInt(req.query.page || 0) * req.query.limit;
-      const sql = `SELECT * FROM pro_sub_category LIMIT ${page}, ${req.query.limit}`;
+      const sql = `SELECT psc.*, sc.name as sub_category_name FROM pro_sub_category psc INNER JOIN sub_category sc ON sc.id = psc.sub_category_id LIMIT ${page}, ${req.query.limit}`;
       const count = "SELECT COUNT(id) FROM pro_sub_category";
       getDataFromDB(res, sql, count);
     } else {
@@ -27,7 +27,6 @@ export function getProSub(req, res) {
 const prosubSchema = Joi.object({
   name: Joi.string().required(),
   sub_category_id: Joi.number().integer().required(),
-  sub_category_name: Joi.string().required(),
 });
 
 export async function postProSub(req, res) {

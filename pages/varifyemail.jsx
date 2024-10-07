@@ -1,11 +1,13 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { GrValidate } from "react-icons/gr";
 import { BiErrorCircle } from "react-icons/bi";
+import { GrValidate } from "react-icons/gr";
+import useStore from "../components/context/useStore";
 
 const VarifyEmail = () => {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
+  const store = useStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -23,7 +25,7 @@ const VarifyEmail = () => {
 
   if (loading)
     return (
-      <div className="text-center mt-20 text-xl">
+      <div className='text-center mt-20 text-xl'>
         <p>Loading...</p>
       </div>
     );

@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import useStore from "../components/context/useStore";
 
 const Forgotpassword = () => {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(null);
   const { handleSubmit, register } = useForm();
   const router = useRouter();
+  const store = useStore();
 
   useEffect(() => {
     (async () => {
@@ -50,7 +52,7 @@ const Forgotpassword = () => {
 
   if (loading)
     return (
-      <div className="text-center mt-20 text-xl">
+      <div className='text-center mt-20 text-xl'>
         <p>Loading...</p>
       </div>
     );
@@ -59,24 +61,24 @@ const Forgotpassword = () => {
       {success ? (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="forgot-password-form"
+          className='forgot-password-form'
         >
           <input
             {...register("password", { required: true })}
-            type="password"
-            placeholder="Enter your password"
+            type='password'
+            placeholder='Enter your password'
           />
           <input
             {...register("repassword", { required: true })}
-            type="password"
-            placeholder="Confirm the password"
+            type='password'
+            placeholder='Confirm the password'
           />
-          <div className="flex justify-center">
-            <button className="btn active">Change password</button>
+          <div className='flex justify-center'>
+            <button className='btn active'>Change password</button>
           </div>
         </form>
       ) : (
-        <div className="text-center text-xl mt-10 text-rose-500">
+        <div className='text-center text-xl mt-10 text-rose-500'>
           <p>The Link is expired</p>
         </div>
       )}

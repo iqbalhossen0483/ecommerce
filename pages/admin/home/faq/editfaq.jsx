@@ -1,10 +1,10 @@
-import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
-import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
 import dynamic from "next/dynamic";
-import useStore from "../../../../components/context/useStore";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
 import { PageInfo } from "../../../../components/admin/common/common";
+import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
+import useStore from "../../../../components/context/useStore";
 const TextEditor = dynamic(
   () => import("../../../../components/admin/common/TextEditor"),
   {
@@ -15,8 +15,8 @@ const TextEditor = dynamic(
 const EditFaq = () => {
   const [loading, setLoading] = useState(false);
   const [faq, setFaq] = useState(null);
-  const question = useRef(null);
-  const answer = useRef(null);
+  const title = useRef(null);
+  const body = useRef(null);
   const store = useStore();
   const router = useRouter();
 
@@ -40,8 +40,8 @@ const EditFaq = () => {
     e.preventDefault();
     const data = {};
     data.user_id = store.user.id;
-    data.question = question.current?.value;
-    data.answer = answer.current?.value;
+    data.title = title.current?.value;
+    data.body = body.current?.value;
     setLoading(true);
     try {
       const res = await fetch(`/api/faq?id=${faq?.id}`, {
@@ -64,36 +64,36 @@ const EditFaq = () => {
   return (
     <DashboardLayout>
       <section>
-        <PageInfo title="FAQ" type="Edit" />
+        <PageInfo title='FAQ' type='Edit' />
 
-        <div className="add-form">
+        <div className='add-form'>
           <form onSubmit={(e) => onsubmit(e)}>
             <div>
               <label>Question</label>
               <input
-                ref={question}
-                defaultValue={faq?.question}
-                type="text"
-                placeholder="Question"
+                ref={title}
+                defaultValue={faq?.title}
+                type='text'
+                placeholder='Question'
               />
             </div>
-            <div className="z-40">
+            <div className='z-40'>
               <label>Answer</label>
-              <TextEditor value={faq?.answer} editorRef={answer} />
+              <TextEditor value={faq?.body} editorRef={body} />
             </div>
 
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <button
                 disabled={loading}
-                type="submit"
-                className="btn active text-sm"
+                type='submit'
+                className='btn active text-sm'
               >
                 UPDATE
               </button>
-              <Link href="/admin/home/faq">
+              <Link href='/admin/home/faq'>
                 <button
-                  type="button"
-                  className="btn text-sm"
+                  type='button'
+                  className='btn text-sm'
                   style={{ backgroundColor: "#dc3545", color: "#fff" }}
                 >
                   GO BACK

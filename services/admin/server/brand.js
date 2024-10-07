@@ -11,17 +11,17 @@ import {
 export function getBrand(req, res) {
   try {
     if (req.query.id) {
-      //send single category;
+      //send single brand;
       const sql = `SELECT * FROM brand WHERE id=${req.query.id}`;
       getDataFromDB(res, sql);
     } else if (req.query.home) {
-      // send category for home category page;
+      // send brand for home brand page;
       const page = parseInt(req.query.page || 0) * req.query.limit;
-      const sql = `SELECT * FROM brand LIMIT ${page}, ${req.query.limit}`;
+      const sql = `SELECT brand.*, ct.name as category FROM brand INNER JOIN category ct ON brand.category_id = ct.id LIMIT ${page}, ${req.query.limit}`;
       const count = "SELECT COUNT(id) FROM brand";
       getDataFromDB(res, sql, count);
     } else {
-      //send all category
+      //send all brand
       const sql = "SELECT * FROM brand";
       getDataFromDB(res, sql);
     }
@@ -33,7 +33,6 @@ export function getBrand(req, res) {
 const brandSchema = Joi.object({
   name: Joi.string().required(),
   category_id: Joi.number().integer().required(),
-  category_name: Joi.string().required(),
   image: Joi.string().required(),
 });
 

@@ -1,14 +1,14 @@
-import multer from "multer";
-import path from "path";
 import fs from "fs";
+import multer from "multer";
 import nodemailer from "nodemailer";
+import path from "path";
 import { queryDocument } from "../mysql";
 
 export const mailer = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "navieausa@gmail.com",
-    pass: process.env.NODEMAILER_SECRET,
+    user: process.env.NODEMAILER_EMAIL_USER,
+    pass: process.env.NODEMAILER_EMAIL_PASS,
   },
 });
 
@@ -139,7 +139,7 @@ export function varifyEmailOpt(email, token) {
   return {
     from: "navieausa@gmail.com", // sender address
     to: email, // list of receivers
-    subject: "Varify your Account", // Subject line
+    subject: "Varify your Account For EasyLife", // Subject line
     html: html(`<div class="contentArea">
     <div class="section2">
       <h1>Verify your account !</h1>
@@ -152,7 +152,7 @@ export function varifyEmailOpt(email, token) {
         if you have any question just reply to this email, We're always happy
         to help out.
       </p>
-      <p class="mt-50">Cheers<br />The Team</p>
+      <p class="mt-50">EasyLife<br />The Team</p>
     </div>
   </div>`),
   };

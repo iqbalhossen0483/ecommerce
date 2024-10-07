@@ -1,9 +1,9 @@
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
 import { PageInfo } from "../../../../components/admin/common/common";
 import useStore from "../../../../components/context/useStore";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import Link from "next/link";
 
 const AdSubCategory = () => {
   const { handleSubmit, register, reset } = useForm();
@@ -25,9 +25,6 @@ const AdSubCategory = () => {
     setLoading(true);
     data.user_id = store.user.id;
     data.image = data.image[0];
-    data.category_name = category?.find(
-      (item) => item.id == data.category_id
-    )?.name;
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
@@ -57,18 +54,18 @@ const AdSubCategory = () => {
   return (
     <DashboardLayout>
       <section>
-        <PageInfo title="Sub Category" type="Add" />
+        <PageInfo title='Sub Category' type='Add' />
 
-        <div className="add-form">
+        <div className='add-form'>
           <form onSubmit={handleSubmit(onsubmit)}>
             <div>
               <label>Category</label>
               <select
-                className="w-full"
+                className='w-full'
                 {...register("category_id", { required: true })}
                 required
               >
-                <option value="">Select</option>
+                <option value=''>Select</option>
                 {category &&
                   category.length &&
                   category.map((item) => (
@@ -83,8 +80,8 @@ const AdSubCategory = () => {
               <input
                 {...register("name", { required: true })}
                 required
-                type="text"
-                placeholder="Sub Category Name"
+                type='text'
+                placeholder='Sub Category Name'
               />
             </div>
             <div>
@@ -93,35 +90,35 @@ const AdSubCategory = () => {
                 {...register("description", { required: true })}
                 rows={5}
                 required
-                type="text"
-                placeholder="Sub Category Description"
+                type='text'
+                placeholder='Sub Category Description'
               />
             </div>
-            <div className="edit-input-container">
+            <div className='edit-input-container'>
               <div>
                 <label style={{ marginLeft: 0, marginBottom: 0 }}>Image </label>
                 <input
                   {...register("image", { required: true })}
                   onChange={(e) => imgHandler(e.target.files[0])}
                   required
-                  accept="image/png, image/jpeg"
-                  type="file"
+                  accept='image/png, image/jpeg'
+                  type='file'
                 />
               </div>
-              {imgUrl && <img className="h-8" src={imgUrl} alt="" />}
+              {imgUrl && <img className='h-8' src={imgUrl} alt='' />}
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <button
                 disabled={loading}
-                type="submit"
-                className="btn active text-sm"
+                type='submit'
+                className='btn active text-sm'
               >
                 SAVE
               </button>
-              <Link href="/admin/home/subcategory">
+              <Link href='/admin/home/subcategory'>
                 <button
-                  type="button"
-                  className="btn text-sm"
+                  type='button'
+                  className='btn text-sm'
                   style={{ backgroundColor: "#dc3545", color: "#fff" }}
                 >
                   GO BACK

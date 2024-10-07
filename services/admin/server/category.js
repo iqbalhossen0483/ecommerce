@@ -22,7 +22,9 @@ export function getCategory(req, res) {
       getDataFromDB(res, sql, count);
     } else {
       //send all category
-      const sql = "SELECT * FROM category ORDER BY priority";
+      const sql = `SELECT ${
+        req.query.opt || "*"
+      } FROM category ORDER BY priority`;
       getDataFromDB(res, sql);
     }
   } catch (error) {
@@ -33,7 +35,7 @@ export function getCategory(req, res) {
 const CategorySchema = Joi.object({
   priority: Joi.number().required(),
   name: Joi.string().required(),
-  description: Joi.string().required().max(500),
+  description: Joi.string().required().max(100),
   image: Joi.string().required(),
 });
 

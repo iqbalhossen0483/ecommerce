@@ -1,7 +1,5 @@
-import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
-import useStore from "../../../../components/context/useStore";
-import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import React, { useEffect, useState } from "react";
+import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import {
   DocumentHandler,
   MainPagesFooterPart,
@@ -9,6 +7,8 @@ import {
   NoDataFount,
   PageInfo,
 } from "../../../../components/admin/common/common";
+import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
+import useStore from "../../../../components/context/useStore";
 
 const DFAQ = () => {
   const [showAction, setShowAction] = useState(-1);
@@ -67,21 +67,22 @@ const DFAQ = () => {
 
   return (
     <DashboardLayout>
-      <div className="dashboard-home-container">
-        <PageInfo title="FAQ" type="View" />
+      <div className='dashboard-home-container'>
+        <PageInfo title='FAQ' type='View' />
 
-        <div className="container">
+        <div className='container'>
           <MainPagesTopPart
-            addLink="/admin/home/faq/addfaq"
+            addLink='/admin/home/faq/addfaq'
             setLimit={setLimit}
           />
 
-          <div className="table-container">
+          <div className='table-container'>
             <table>
               <thead>
                 <tr>
                   <th>ID</th>
                   <th>QUESTION</th>
+                  <th>ANSWER</th>
                 </tr>
               </thead>
               <tbody>
@@ -95,7 +96,7 @@ const DFAQ = () => {
                             i % 2 === 0 ? "bg-[#f1f1f1]" : "bg-[#f9f9f9]"
                           }`}
                         >
-                          <div className="flex items-center gap-1 w-20 ">
+                          <div className='flex items-center gap-1 w-20 '>
                             {showAction !== i ? (
                               <HiPlusCircle />
                             ) : (
@@ -104,7 +105,16 @@ const DFAQ = () => {
                             <span>{item.id}</span>
                           </div>
                         </td>
-                        <td>{item.question}</td>
+                        <td>{item.title}</td>
+                        <td>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                item.body.slice(0, 50) +
+                                `${item.body.length > 50 && "..."}`,
+                            }}
+                          ></div>
+                        </td>
                       </tr>
                       {showAction === i && (
                         <DocumentHandler

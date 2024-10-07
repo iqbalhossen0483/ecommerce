@@ -1,11 +1,11 @@
-import DashboardLayout from "../../../components/admin/common/DashboardLayout";
-import { RiProductHuntFill } from "react-icons/ri";
-import { useForm } from "react-hook-form";
-import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { PageInfo } from "../../../components/admin/common/common";
-import useStore from "../../../components/context/useStore";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { RiProductHuntFill } from "react-icons/ri";
+import { PageInfo } from "../../../components/admin/common/common";
+import DashboardLayout from "../../../components/admin/common/DashboardLayout";
+import useStore from "../../../components/context/useStore";
 const TextEditor = dynamic(
   () => import("../../../components/admin/common/TextEditor"),
   {
@@ -23,6 +23,7 @@ const AddProduct = () => {
   const [showSub, setShowSub] = useState(null);
   const [loading, setLoading] = useState(false);
   const [prosub, setProSub] = useState(null);
+  const [brand, setBrand] = useState(null);
   const description = useRef(null);
   const store = useStore();
 
@@ -43,6 +44,11 @@ const AddProduct = () => {
       if (data) setProSub(data);
       else store?.setAlert({ msg: error, type: "error" });
     })();
+    (async function () {
+      const { data, error } = await store?.fetchData("/api/brand");
+      if (data) setBrand(data);
+      else store?.setAlert({ msg: error, type: "error" });
+    })();
   }, []); //till;
 
   //handle sub category based on category;
@@ -53,6 +59,7 @@ const AddProduct = () => {
       else setShowSub(null);
     } else setShowSub(null);
   } //till;
+
   //handle pro sub category based on sub category;
   function handleProSub(id) {
     if (id) {
@@ -74,28 +81,9 @@ const AddProduct = () => {
     setLoading(true);
     data.user_id = store.user.id;
     data.user_type = store.user.user_role;
-    data.qr_code = `
-    name: ${data.name},
-    ${
-      store.user.user_role === "vendor"
-        ? `vendor: ${store.user.shop_name},`
-        : ""
-    } 
-    sku: ${data.sku}, price: ${data.price}`;
-
-    //find the category, sub category and pro sub name base on their ids;
-    data.category_name = category?.find(
-      (item) => item.id == data.category_id
-    )?.name;
-    if (data.sub_category_id) {
-      data.sub_category_name = subCategory?.find(
-        (item) => item.id == data.sub_category_id
-      )?.name;
-    }
-    if (data.pro_sub_id) {
-      data.pro_sub_name = prosub?.find(
-        (item) => item.id == data.pro_sub_id
-      )?.name;
+    data.qr_code = `name: ${data.name},\nsku: ${data.sku},\nprice: ${data.price}`;
+    if (store.user.user_role === "vendor") {
+      data.qr_code += `\nvendor: ${store.user.shop_name}`;
     }
 
     data.description = description.current?.value;
@@ -139,12 +127,6 @@ const AddProduct = () => {
       required: true,
     },
     {
-      name: "brand",
-      label: "Brand Name",
-      type: "text",
-      required: true,
-    },
-    {
       name: "sku",
       label: "SKU",
       type: "text",
@@ -165,7 +147,7 @@ const AddProduct = () => {
     {
       name: "tax",
       label: "Tax (%)",
-      type: "number",
+      type: "text",
       required: false,
     },
     {
@@ -194,9 +176,9 @@ const AddProduct = () => {
   return (
     <DashboardLayout>
       <div>
-        <PageInfo title="Product" type="Add" icon={<RiProductHuntFill />} />
+        <PageInfo title='Product' type='Add' icon={<RiProductHuntFill />} />
 
-        <div className="add-form">
+        <div className='add-form'>
           <form onSubmit={handleSubmit(onSubmit)}>
             {inputs.map((item, i) => (
               <div key={i}>
@@ -214,35 +196,52 @@ const AddProduct = () => {
               <input
                 {...register("keyword", { required: true })}
                 required
-                type="text"
-                placeholder="Give input like a | b | c"
+                type='text'
+                placeholder='Give input like a | b | c'
               />
             </div>
             <div>
               <label>Product size</label>
               <input
                 {...register("size")}
-                type="text"
-                placeholder="Give input like a | b | c"
+                type='text'
+                placeholder='Give input like a | b | c'
               />
             </div>
             <div>
               <label>Colour variant</label>
               <input
-                {...register("size")}
-                type="text"
-                placeholder="Give input like a | b | c"
+                {...register("colour")}
+                type='text'
+                placeholder='Give input like a | b | c'
               />
+            </div>
+            <div>
+              <label>Brand Name</label>
+              <select
+                {...register("brand", { required: true })}
+                className='w-full'
+                required
+              >
+                <option value=''>select</option>
+                {brand &&
+                  brand.length &&
+                  brand.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+              </select>
             </div>
             <div>
               <label>Product Category</label>
               <select
                 {...register("category_id", { required: true })}
-                className="w-full"
+                className='w-full'
                 required
                 onChange={(e) => handleSubCategory(e.target.value)}
               >
-                <option value="">select</option>
+                <option value=''>select</option>
                 {category &&
                   category.length &&
                   category.map((item) => (
@@ -257,10 +256,10 @@ const AddProduct = () => {
               <select
                 {...register("sub_category_id", { required: showSub })}
                 onChange={(e) => handleProSub(e.target.value)}
-                className="w-full"
+                className='w-full'
                 required={showSub}
               >
-                <option value="">select</option>
+                <option value=''>select</option>
                 {showSub &&
                   showSub.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -274,10 +273,10 @@ const AddProduct = () => {
               <label>Product Pro Sub Category</label>
               <select
                 {...register("pro_sub_id", { required: showProsub })}
-                className="w-full"
+                className='w-full'
                 required={showProsub}
               >
-                <option value="">select</option>
+                <option value=''>select</option>
                 {showProsub &&
                   showProsub.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -291,24 +290,24 @@ const AddProduct = () => {
               <label>Product type</label>
               <select
                 {...register("type", { required: true })}
-                className="w-full"
+                className='w-full'
                 required
               >
-                <option value="">select</option>
-                <option value="single">Single</option>
-                <option value="package">Package</option>
+                <option value=''>select</option>
+                <option value='single'>Single</option>
+                <option value='package'>Package</option>
               </select>
             </div>
             <div>
               <label>Product Unit</label>
               <select
                 {...register("unit", { required: true })}
-                className="w-full"
+                className='w-full'
                 required
               >
-                <option value="">select</option>
-                <option value="piece">Piece</option>
-                <option value="kg">KG</option>
+                <option value=''>select</option>
+                <option value='piece'>Piece</option>
+                <option value='kg'>KG</option>
               </select>
             </div>
 
@@ -317,15 +316,15 @@ const AddProduct = () => {
               <textarea
                 {...register("short_description", { required: true })}
                 required
-                placeholder="Short Description"
-                rows="6"
+                placeholder='Short Description'
+                rows='4'
               />
             </div>
             <div>
               <label>Description</label>
               <TextEditor editorRef={description} />
             </div>
-            <div className="edit-input-container">
+            <div className='edit-input-container'>
               <div>
                 <label style={{ marginLeft: 0, marginBottom: 0 }}>
                   Main Image
@@ -334,14 +333,14 @@ const AddProduct = () => {
                   {...register("main_image", { required: true })}
                   required
                   onChange={(e) => hanleMainImg(e.target.files[0])}
-                  accept="image/png, image/jpeg"
-                  type="file"
+                  accept='image/png, image/jpeg'
+                  type='file'
                 />
               </div>
-              {mainImgUrl && <img className="h-8" src={mainImgUrl} alt="" />}
+              {mainImgUrl && <img className='h-8' src={mainImgUrl} alt='' />}
             </div>
 
-            <div className="edit-input-container">
+            <div className='edit-input-container'>
               <div>
                 <label style={{ marginLeft: 0, marginBottom: 0 }}>
                   Features Images
@@ -351,31 +350,31 @@ const AddProduct = () => {
                   multiple
                   onChange={(e) => handleFeatureUrl(e.target.files)}
                   maxLength={5}
-                  accept="image/png, image/jpeg"
+                  accept='image/png, image/jpeg'
                   required
-                  type="file"
+                  type='file'
                 />
               </div>
               {featuresImgUrl && (
-                <div className="flex gap-1">
+                <div className='flex gap-1'>
                   {featuresImgUrl.map((img, i) => (
-                    <img className="h-8" key={i} src={img.url} alt="" />
+                    <img className='h-8' key={i} src={img.url} alt='' />
                   ))}
                 </div>
               )}
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <button
                 disabled={loading}
-                type="submit"
-                className="btn active text-sm"
+                type='submit'
+                className='btn active text-sm'
               >
                 SAVE
               </button>
-              <Link href="/admin/product">
+              <Link href='/admin/product'>
                 <button
-                  type="button"
-                  className="btn text-sm"
+                  type='button'
+                  className='btn text-sm'
                   style={{ backgroundColor: "#dc3545", color: "#fff" }}
                 >
                   GO BACK

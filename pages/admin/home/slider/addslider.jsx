@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { FaHome } from "react-icons/fa";
-import { useForm } from "react-hook-form";
-import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
 import Link from "next/link";
-import useStore from "../../../../components/context/useStore";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { PageInfo } from "../../../../components/admin/common/common";
+import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
+import useStore from "../../../../components/context/useStore";
 
 const AdSlider = () => {
   const { handleSubmit, register, reset } = useForm();
@@ -27,9 +26,6 @@ const AdSlider = () => {
     setLoading(true);
     data.user_id = store.user.id;
     data.image = data.image[0];
-    data.category_name = category?.find(
-      (item) => item.id == data.category_id
-    )?.name;
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
@@ -59,52 +55,43 @@ const AdSlider = () => {
   return (
     <DashboardLayout>
       <section>
-        <PageInfo title="Slider" type="Add" />
+        <PageInfo title='Slider' type='Add' />
 
-        <div className="add-form">
+        <div className='add-form'>
           <form onSubmit={handleSubmit(onsubmit)}>
             <div>
-              <label>Category</label>
-              <select
-                className="w-full"
+              <label>Link</label>
+              <input
                 required
-                {...register("category_id", { required: true })}
-              >
-                <option value="">select</option>
-                {category &&
-                  category.length &&
-                  category.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-              </select>
+                {...register("link", { required: true })}
+                placeholder='Give a link'
+              />
             </div>
-            <div className="edit-input-container">
+            <div className='edit-input-container'>
               <div>
                 <label style={{ marginLeft: 0, marginBottom: 0 }}>Image </label>
                 <input
                   {...register("image", { required: true })}
                   onChange={(e) => imgHandler(e.target.files[0])}
                   required
-                  accept="image/png, image/gif image/jpeg"
-                  type="file"
+                  accept='image/png, image/gif image/jpeg'
+                  type='file'
                 />
               </div>
-              {imgUrl && <img className="h-8" src={imgUrl} alt="" />}
+              {imgUrl && <img className='h-8' src={imgUrl} alt='' />}
             </div>
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <button
                 disabled={loading}
-                type="submit"
-                className="btn active text-sm"
+                type='submit'
+                className='btn active text-sm'
               >
                 SAVE
               </button>
-              <Link href="/admin/home/slider">
+              <Link href='/admin/home/slider'>
                 <button
-                  type="button"
-                  className="btn text-sm"
+                  type='button'
+                  className='btn text-sm'
                   style={{ backgroundColor: "#dc3545", color: "#fff" }}
                 >
                   GO BACK

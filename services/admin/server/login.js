@@ -1,7 +1,7 @@
-import { errorHandler, forgotMailOpt, mailer, varifyEmailOpt } from "./common";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { postDocument, queryDocument } from "../mysql";
+import { errorHandler, forgotMailOpt, mailer, varifyEmailOpt } from "./common";
 
 export async function getUser(req, res) {
   try {
@@ -69,6 +69,8 @@ export async function loginUser(req, res) {
     }
     // normal email login
     else {
+      console.log("login password: ", req.body.password);
+
       const sql = `SELECT * FROM user WHERE email = '${req.body.email}'`;
       const result = await queryDocument(sql);
       if (!result.length) {
@@ -95,10 +97,12 @@ export async function signUpUser(req, res) {
       const sql = `SELECT * FROM user WHERE id = '${req.body.id}' AND email = '${req.body.email}'`;
       const result = await queryDocument(sql);
       if (!result.length) throw { message: "There was an error" };
+      console.log("user password: ", req.body.password);
+
       const hashed = await bcrypt.hash(req.body.password, 10);
       const query = `UPDATE user SET password='${hashed}' WHERE id=${req.body.id}`;
       const user = await queryDocument(query);
-      if (user.changedRows > 0) {
+      if (user.changedRows) {
         const sql = `SELECT * FROM user WHERE id = '${req.body.id}'`;
         const result = await queryDocument(sql);
         const token = jwt.sign({ ...result[0] }, process.env.JWT_SECRET, {
@@ -114,7 +118,6 @@ export async function signUpUser(req, res) {
     else {
       const sql = `SELECT * FROM user WHERE email = '${req.body.email}'`;
       const result = await queryDocument(sql);
-
       if (result.length) throw { message: "User already exist", status: 409 };
 
       const token = jwt.sign(req.body, process.env.JWT_SECRET, {
@@ -166,7 +169,7 @@ async function varifyEmail(req, res) {
     varifyUser.password = hashedPassword;
     const sql = "INSERT INTO user SET ";
     const user = postDocument(sql, varifyUser);
-    if (user.insertId > 0) {
+    if (user.insertId) {
       const sql = `SELECT * FROM user WHERE id = '${result.insertId}'`;
       const result = queryDocument(sql);
       delete result[0].password;
@@ -203,6 +206,7 @@ async function sendUserInfo(req, res, result) {
       req.body.password,
       result[0].password
     );
+
     if (!isRightPassword) {
       throw { message: "Username or password incorrect", status: 401 };
     } else {

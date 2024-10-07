@@ -1,17 +1,15 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { menus, vendorMenu } from "../../../services/admin/menus";
-import { AiOutlineClear } from "react-icons/ai";
-import useStore from "../../context/useStore";
-import { FaBars } from "react-icons/fa";
-import { useRouter } from "next/router";
 import { useState } from "react";
+import { AiOutlineClear } from "react-icons/ai";
+import { FaBars } from "react-icons/fa";
+import { menus, vendorMenu } from "../../../services/admin/menus";
+import useStore from "../../context/useStore";
 import Header from "./Header";
 import Menus from "./Menus";
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  const router = useRouter();
   const store = useStore();
 
   const showAnimation = {
@@ -45,7 +43,7 @@ const DashboardLayout = ({ children }) => {
         <div className='top_section'>
           {isOpen && (
             <AnimatePresence>
-              <motion.h1 className='admin-logo'>IQBAL HOSSEN</motion.h1>
+              <motion.h1 className='admin-logo'>EasyLife</motion.h1>
             </AnimatePresence>
           )}
 
@@ -99,7 +97,7 @@ const DashboardLayout = ({ children }) => {
         <div className='footer'>
           <p className=''>Copyright © 2022 All Rights Reserved.</p>
           <p>
-            Powered By{" "}
+            Developed By{" "}
             <a
               className='text-blue-500 font-medium'
               href='https://iqbalhossen-c5422.web.app/'

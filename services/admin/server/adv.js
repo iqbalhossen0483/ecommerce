@@ -31,10 +31,8 @@ export function getAdv(req, res) {
 }
 
 const advSchema = joi.object({
-  category_id: joi.number().integer().required(),
-  category_name: joi.string().required(),
-  sub_category_id: joi.number().integer(),
-  sub_category_name: joi.string(),
+  position: joi.string().required(),
+  link: joi.string().required(),
   image: joi.string().required(),
 });
 

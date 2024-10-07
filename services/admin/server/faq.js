@@ -25,8 +25,8 @@ export function getFaq(req, res) {
 }
 
 const FaqSchema = Joi.object({
-  question: Joi.string().max(400).required(),
-  answer: Joi.string().max(600).required(),
+  title: Joi.string().max(150).required(),
+  body: Joi.string().max(500).required(),
 });
 
 export async function postFaq(req, res) {

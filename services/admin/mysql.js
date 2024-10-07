@@ -1,28 +1,28 @@
 import mysql from "mysql2/promise";
 
-export async function mySql() {
-  const db = await mysql.createConnection({
-    host: "localhost",
-    user: "diaryofmind_iqbal",
-    database: "diaryofmind_iqbal",
-    password: "rPg#];Bb+~Gn",
-    connectionLimit: 10,
-    waitForConnections: true,
-  });
-  return db;
-}
 // export async function mySql() {
 //   const db = await mysql.createConnection({
 //     host: "localhost",
-//     user: "root",
-//     database: "ecommerce",
-//     password: "",
+//     user: "diaryofmind_iqbal",
+//     database: "diaryofmind_iqbal",
+//     password: "rPg#];Bb+~Gn",
 //     connectionLimit: 10,
 //     waitForConnections: true,
 //   });
-
 //   return db;
 // }
+export async function mySql() {
+  const db = await mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    database: "ecommerce",
+    password: "",
+    connectionLimit: 10,
+    waitForConnections: true,
+  });
+
+  return db;
+}
 
 export const queryDocument = async (query) => {
   const connection = await mySql();
@@ -36,8 +36,8 @@ export const postDocument = async (query, doc, option = undefined) => {
   let data = "";
   Object.entries(doc).forEach(([key, value]) => {
     if (data) {
-      data += `, ${key} = '${value}'`;
-    } else data += `${key} = '${value}'`;
+      data += `, ${key} = "${value}"`;
+    } else data += `${key} = "${value}"`;
   });
   if (option) data += option;
   const result = await connection.execute(query + data);

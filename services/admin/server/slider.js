@@ -31,8 +31,7 @@ export function getSlider(req, res) {
 }
 
 const sliderSchema = Joi.object({
-  category_id: Joi.number().integer().required(),
-  category_name: Joi.string().required(),
+  link: Joi.string().required(),
   image: Joi.string().required(),
 });
 

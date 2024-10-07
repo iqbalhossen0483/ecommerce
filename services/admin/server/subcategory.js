@@ -17,7 +17,7 @@ export function getSubcategory(req, res) {
     } else if (req.query.home) {
       // send category for home category page;
       const page = parseInt(req.query.page || 0) * req.query.limit;
-      const sql = `SELECT * FROM sub_category LIMIT ${page}, ${req.query.limit}`;
+      const sql = `SELECT sc.*, c.name as category_name FROM sub_category sc INNER JOIN category c ON c.id = sc.category_id LIMIT ${page}, ${req.query.limit}`;
       const count = "SELECT COUNT(id) FROM sub_category";
       getDataFromDB(res, sql, count);
     } else {
@@ -33,8 +33,7 @@ export function getSubcategory(req, res) {
 const subCategorySchema = Joi.object({
   name: Joi.string().required(),
   category_id: Joi.number().integer().required(),
-  category_name: Joi.string().required(),
-  description: Joi.string().max(500),
+  description: Joi.string().max(100),
   image: Joi.string().required(),
 });
 

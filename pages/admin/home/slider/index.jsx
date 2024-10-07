@@ -1,7 +1,5 @@
-import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import React, { useEffect, useState } from "react";
-import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
-import useStore from "../../../../components/context/useStore";
+import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import {
   DocumentHandler,
   MainPagesFooterPart,
@@ -9,6 +7,8 @@ import {
   NoDataFount,
   PageInfo,
 } from "../../../../components/admin/common/common";
+import DashboardLayout from "../../../../components/admin/common/DashboardLayout";
+import useStore from "../../../../components/context/useStore";
 
 const DSlider = () => {
   const [showAction, setShowAction] = useState(-1);
@@ -60,22 +60,22 @@ const DSlider = () => {
 
   return (
     <DashboardLayout>
-      <div className="dashboard-home-container">
-        <PageInfo title="Slider" type="View" />
+      <div className='dashboard-home-container'>
+        <PageInfo title='Slider' type='View' />
 
-        <div className="container">
+        <div className='container'>
           <MainPagesTopPart
-            addLink="/admin/home/slider/addslider"
+            addLink='/admin/home/slider/addslider'
             setLimit={setLimit}
           />
 
-          <div className="table-container">
+          <div className='table-container'>
             <table>
               <thead>
                 <tr>
                   <th>ID</th>
                   <th>IMAGE</th>
-                  <th>CATEGORY</th>
+                  <th>LINK</th>
                 </tr>
               </thead>
               <tbody>
@@ -89,7 +89,7 @@ const DSlider = () => {
                             i % 2 === 0 ? "bg-[#f1f1f1]" : "bg-[#f9f9f9]"
                           }`}
                         >
-                          <div className="flex items-center gap-1">
+                          <div className='flex items-center gap-1'>
                             {showAction !== i ? (
                               <HiPlusCircle />
                             ) : (
@@ -100,12 +100,12 @@ const DSlider = () => {
                         </td>
                         <td>
                           <img
-                            className="h-5"
+                            className='h-5'
                             src={`/assets/${item.image}`}
-                            alt=""
+                            alt=''
                           />
                         </td>
-                        <td>{item.category_name}</td>
+                        <td>{item.link}</td>
                       </tr>
                       {showAction === i && (
                         <DocumentHandler

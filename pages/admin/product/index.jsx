@@ -1,8 +1,6 @@
-import DashboardLayout from "../../../components/admin/common/DashboardLayout";
-import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
-import useStore from "../../../components/context/useStore";
-import { RiProductHuntFill } from "react-icons/ri";
 import React, { useEffect, useRef, useState } from "react";
+import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
+import { RiProductHuntFill } from "react-icons/ri";
 import QRCode from "react-qr-code";
 import {
   DocumentHandler,
@@ -11,6 +9,8 @@ import {
   NoDataFount,
   PageInfo,
 } from "../../../components/admin/common/common";
+import DashboardLayout from "../../../components/admin/common/DashboardLayout";
+import useStore from "../../../components/context/useStore";
 import { downloadSVGAsPNG } from "../../../services/client/common";
 
 const Products = () => {
@@ -49,26 +49,29 @@ const Products = () => {
   async function deleteProduct(id, image, features_img) {
     const confirm = window.confirm("Are you sure to delete?");
     if (confirm) {
-      setLoading(true);
-      const img = [image];
-      img.push(...JSON.parse(features_img));
-      const formData = new FormData();
-      formData.append("user_id", store.user.id);
-      formData.append("user_type", store.user.user_role);
-      formData.append("id", id);
-      formData.append("image", JSON.stringify(img));
-      const { error, message } = await store?.deleteData(
-        `/api/product`,
-        formData
-      );
-      if (!error) {
-        store?.setAlert({ msg: message, type: "success" });
-        setUpdate((prev) => !prev);
-        setShowAction(-1);
-      } else {
-        store?.setAlert({ msg: message, type: "error" });
+      try {
+        setLoading(true);
+        const img = [image];
+        img.push(...features_img.split("|"));
+        const formData = new FormData();
+        formData.append("user_id", store.user.id);
+        formData.append("user_type", store.user.user_role);
+        formData.append("id", id);
+        formData.append("image", JSON.stringify(img));
+        const { error, message } = await store?.deleteData(
+          `/api/product`,
+          formData
+        );
+        if (!error) {
+          store?.setAlert({ msg: message, type: "success" });
+          setUpdate((prev) => !prev);
+          setShowAction(-1);
+        } else {
+          store?.setAlert({ msg: message, type: "error" });
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
   }
 
@@ -76,17 +79,17 @@ const Products = () => {
     <DashboardLayout>
       <div
         onClick={() => setSeeQrcode(null)}
-        className="dashboard-home-container"
+        className='dashboard-home-container'
       >
-        <PageInfo title="Product" type="View" icon={<RiProductHuntFill />} />
+        <PageInfo title='Product' type='View' icon={<RiProductHuntFill />} />
 
-        <div className="container">
+        <div className='container'>
           <MainPagesTopPart
-            addLink="/admin/product/addproduct"
+            addLink='/admin/product/addproduct'
             setLimit={setLimit}
           />
 
-          <div className="table-container">
+          <div className='table-container'>
             <table>
               <thead>
                 <tr>
@@ -120,9 +123,9 @@ const Products = () => {
                         </td>
                         <td>
                           <img
-                            className="h-5 object-contain"
+                            className='h-5 object-contain'
                             src={`/assets/${item.main_image}`}
-                            alt=""
+                            alt=''
                           />
                         </td>
                         <td>{item.name}</td>
@@ -177,7 +180,7 @@ const Products = () => {
                 seeQrcode.split(",")[0].split(":")[1].trim()
               );
             }}
-            className="qr-code-container"
+            className='qr-code-container'
           >
             <QRCode ref={svgRef} value={seeQrcode || ""} />
           </div>

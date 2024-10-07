@@ -17,7 +17,7 @@ export function getOffer(req, res) {
     } else if (req.query.home) {
       // send category for home category page;
       const page = parseInt(req.query.page || 0) * req.query.limit;
-      const sql = `SELECT * FROM offer LIMIT ${page}, ${req.query.limit}`;
+      const sql = `SELECT offer.*, p.main_image as product_image, c.name as category_name FROM offer LEFT JOIN product p ON p.id = offer.product_id LEFT JOIN category c ON c.id = offer.category_id LIMIT ${page}, ${req.query.limit}`;
       const count = "SELECT COUNT(id) FROM offer";
       getDataFromDB(res, sql, count);
     } else {
@@ -33,8 +33,12 @@ export function getOffer(req, res) {
 const OfferSchema = Joi.object({
   priority: Joi.number().integer().required(),
   title: Joi.string().required(),
-  product_link: Joi.string().required(),
   image: Joi.string().required(),
+  product: Joi.number(),
+  category: Joi.number(),
+  all_product: Joi.number(),
+  product_id: [Joi.number().integer(), Joi.allow(null)],
+  category_id: [Joi.number().integer(), Joi.allow(null)],
 });
 
 export async function postOffer(req, res) {
@@ -92,6 +96,9 @@ export async function updateOffer(req, res) {
       exist = req.body.existimage;
       delete req.body.existimage;
     }
+    if (req.body.category_id === 0) req.body.category_id = null;
+    if (req.body.product_id === 0) req.body.product_id = null;
+
     const sql = `UPDATE offer SET `;
     const option = `WHERE id=${req.query.id}`;
     const result = await postDocument(sql, req.body, option);
