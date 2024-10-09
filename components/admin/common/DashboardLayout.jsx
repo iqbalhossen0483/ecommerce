@@ -52,7 +52,7 @@ const DashboardLayout = ({ children }) => {
           </div>
         </div>
         <section className='menus-wrapper'>
-          {store.user && store.user.user_role === "owner" ? (
+          {store.user && store.user.user_role === "admin" ? (
             <Menus
               isOpen={isOpen}
               menus={menus}

@@ -38,18 +38,23 @@ const UserSchema = Joi.object({
   name: Joi.string().max(100).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  user_role: Joi.string().valid("uploader", "owner").required(),
-  profile: Joi.string(),
+  user_role: Joi.string()
+    .valid("customer", "staff", "administrator", "admin")
+    .required(),
+  image: Joi.string(),
+  vandor_id: Joi.number().integer(),
 });
 
 export async function postUser(req, res) {
   try {
-    const img = [{ name: "profile", maxCount: 1 }];
+    const img = [{ name: "image", maxCount: 1 }];
     const { error } = await bodyParser(req, res, "assets", img);
     if (error) throw { message: "Error occured when parsing body" };
+
     await varifyOwner(req.body.user_id);
     delete req.body.user_id;
     //api validateion;
+
     const varify = UserSchema.validate(req.body);
     if (varify.error) throw { message: varify.error.message };
 
@@ -61,10 +66,10 @@ export async function postUser(req, res) {
     //hased password;
     const hashed = await bcrypt.hash(req.body.password, 10);
     req.body.password = hashed;
-    if (req.files.profile) {
-      req.body.profile = req.files.profile[0].filename;
-    } else delete req.body.profile;
-    req.body.joined_at = new Date();
+    if (req.files.image) {
+      req.body.image = req.files.image[0].filename;
+    } else delete req.body.image;
+    req.body.joined_at = new Date().toISOString();
 
     //save to db;
     const sql = "INSERT INTO user SET ";
@@ -73,8 +78,8 @@ export async function postUser(req, res) {
       res.send({ message: "User Added Successfully" });
     } else throw { message: "Unable to Added" };
   } catch (error) {
-    if (req.files.profile) {
-      deleteImage(req.files.profile[0].filename);
+    if (req.files.image) {
+      deleteImage(req.files.image[0].filename);
     }
     errorHandler(res, error);
   }
@@ -102,7 +107,7 @@ export async function deleteUser(req, res) {
 
 export async function updateUser(req, res) {
   try {
-    const img = [{ name: "profile", maxCount: 1 }];
+    const img = [{ name: "image", maxCount: 1 }];
     const { error } = await bodyParser(req, res, "assets", img);
     if (error) throw { message: "Error occured when parsing body" };
     await varifyOwner(req.body.user_id);
@@ -112,10 +117,18 @@ export async function updateUser(req, res) {
       req.body.password = hashed;
     }
 
+    let existImage;
+    if (req.files.image) {
+      req.body.image = req.files.image[0].filename;
+      existImage = req.body.existImage;
+      delete req.body.existImage;
+    }
+
     const sql = `UPDATE user SET `;
     const option = `WHERE id=${req.query.id}`;
     const result = await postDocument(sql, req.body, option);
     if (result.changedRows > 0) {
+      if (existImage) deleteImage(existImage);
       res.send({ message: "User Updated Successfully" });
     } else throw { message: "Unable to Update" };
   } catch (error) {

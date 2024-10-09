@@ -32,13 +32,16 @@ const CouponSchema = Joi.object({
   code: Joi.string().max(50).required(),
   amount: Joi.number().required(),
   type: Joi.string().required(),
-  user_id: Joi.number().integer().required(),
-  user_type: Joi.string().required(),
+  store_id: Joi.number().integer(),
+  validate_for: Joi.date().required(),
+  started_at: Joi.date().required(),
 });
 
 export async function postCoupon(req, res) {
   try {
     await varifyUser(req.body.user_id, req.body.user_type);
+    delete req.body.user_id;
+    delete req.body.user_type;
     //api validateion;
     const varify = CouponSchema.validate(req.body);
     if (varify.error) throw { message: varify.error.message };
@@ -53,6 +56,8 @@ export async function postCoupon(req, res) {
       res.send({ message: "Coupon Added Successfully" });
     } else throw { message: "Unable to Added" };
   } catch (error) {
+    console.log(error);
+
     errorHandler(res, error);
   }
 }

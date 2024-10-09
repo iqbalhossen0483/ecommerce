@@ -102,21 +102,6 @@ const Editblog = () => {
       data.body = body.current?.value;
       data.user_id = store.user.id;
       data.user_type = store.user.user_role;
-      if (data.category_id) {
-        data.category_name = category?.find(
-          (item) => item.id == data.category_id
-        )?.name;
-      }
-      if (data.sub_category_id) {
-        data.sub_category_name = subCategory?.find(
-          (item) => item.id == data.sub_category_id
-        )?.name;
-      }
-      if (data.pro_sub_id) {
-        data.pro_sub_name = prosub?.find(
-          (item) => item.id == data.pro_sub_id
-        )?.name;
-      }
 
       const res = await fetch(`/api/blog?id=${router.query.id}`, {
         method: "PUT",
@@ -139,8 +124,8 @@ const Editblog = () => {
   return (
     <DashboardLayout>
       <div>
-        <PageInfo title="Blog" type="Add" icon={<FaBlogger />} />
-        <div className="add-form">
+        <PageInfo title='Blog' type='Add' icon={<FaBlogger />} />
+        <div className='add-form'>
           <form onSubmit={handleSubmit(onsubmit)}>
             <div>
               <label>Blog Title</label>
@@ -148,17 +133,17 @@ const Editblog = () => {
                 {...register("title")}
                 defaultValue={blog?.title || ""}
                 rows={1}
-                placeholder="Blog Title"
+                placeholder='Blog Title'
               />
             </div>
             <div>
               <label>Product Category</label>
               <select
                 {...register("category_id")}
-                className="w-full"
+                className='w-full'
                 onChange={(e) => handleSubCategory(e.target.value)}
               >
-                <option value="">select</option>
+                <option value=''>select</option>
                 {category &&
                   category.length &&
                   category.map((item) => (
@@ -177,9 +162,9 @@ const Editblog = () => {
               <select
                 {...register("sub_category_id")}
                 onChange={(e) => handleProSub(e.target.value)}
-                className="w-full"
+                className='w-full'
               >
-                <option value="">select</option>
+                <option value=''>select</option>
                 {showSub &&
                   showSub.map((item) => (
                     <option
@@ -195,8 +180,8 @@ const Editblog = () => {
 
             <div>
               <label>Product Pro Sub Category</label>
-              <select {...register("pro_sub_id")} className="w-full">
-                <option value="">select</option>
+              <select {...register("pro_sub_id")} className='w-full'>
+                <option value=''>select</option>
                 {showProsub &&
                   showProsub.map((item) => (
                     <option
@@ -209,23 +194,23 @@ const Editblog = () => {
                   ))}
               </select>
             </div>
-            <div className="z-40">
+            <div className='z-40'>
               <label>Blog body</label>
-              <TextEditor value={blog?.body} editorRef={body} page="blog" />
+              <TextEditor value={blog?.body} editorRef={body} page='blog' />
             </div>
 
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <button
                 disabled={loading}
-                type="submit"
-                className="btn active text-sm"
+                type='submit'
+                className='btn active text-sm'
               >
                 UPDATE
               </button>
-              <Link href="/admin/home/faq">
+              <Link href='/admin/home/faq'>
                 <button
-                  type="button"
-                  className="btn text-sm"
+                  type='button'
+                  className='btn text-sm'
                   style={{ backgroundColor: "#dc3545", color: "#fff" }}
                 >
                   CANCEL

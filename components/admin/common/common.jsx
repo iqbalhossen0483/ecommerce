@@ -81,8 +81,7 @@ export function MainPagesFooterPart({
   return (
     <div className='flex flex-col md:flex-row gap-3 justify-between mt-6 items-center'>
       <p className='text-sm'>
-        Showing {page * limit} to {showingData + page * limit} of {count}{" "}
-        entries
+        Showing {page + 1} to {showingData} of {count} entries
       </p>
       <div className='flex gap-1'>
         <button

@@ -1,3 +1,4 @@
+import { Markup } from "interweave";
 import React, { useEffect, useState } from "react";
 import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import {
@@ -107,13 +108,12 @@ const DFAQ = () => {
                         </td>
                         <td>{item.title}</td>
                         <td>
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html:
-                                item.body.slice(0, 50) +
-                                `${item.body.length > 50 && "..."}`,
-                            }}
-                          ></div>
+                          <Markup
+                            content={
+                              item.body.slice(0, 50) +
+                              `${item.body.length > 50 && "..."}`
+                            }
+                          />
                         </td>
                       </tr>
                       {showAction === i && (

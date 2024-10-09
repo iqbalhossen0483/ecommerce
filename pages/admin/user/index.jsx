@@ -1,7 +1,6 @@
-import DashboardLayout from "../../../components/admin/common/DashboardLayout";
-import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
-import { AiOutlineUser } from "react-icons/ai";
 import React, { useEffect, useState } from "react";
+import { AiOutlineUser } from "react-icons/ai";
+import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import {
   DocumentHandler,
   MainPagesFooterPart,
@@ -9,7 +8,15 @@ import {
   NoDataFount,
   PageInfo,
 } from "../../../components/admin/common/common";
+import DashboardLayout from "../../../components/admin/common/DashboardLayout";
 import useStore from "../../../components/context/useStore";
+
+export const userRole = [
+  { role: "customer", txt: "Customer" },
+  { role: "staff", txt: "Sales Staff" },
+  { role: "administrator", txt: "Administrator" },
+  { role: "admin", txt: "Admin" },
+];
 
 const DUser = () => {
   const [showAction, setShowAction] = useState(-1);
@@ -78,28 +85,20 @@ const DUser = () => {
     }
   } //till;
 
-  const filterOpt = [
-    { txt: "All", value: "" },
-    { role: "customer", txt: "Customer" },
-    { role: "staff", txt: "Sales Staff" },
-    { role: "owner", txt: "Owner" },
-    { role: "administrator", txt: "Store Administrator" },
-  ];
-
   return (
     <DashboardLayout>
-      <div className="dashboard-home-container">
-        <PageInfo title="User Board" type="View" icon={<AiOutlineUser />} />
+      <div className='dashboard-home-container'>
+        <PageInfo title='User Board' type='View' icon={<AiOutlineUser />} />
 
-        <div className="container">
+        <div className='container'>
           <MainPagesTopPart
             setFilter={setfiltered}
-            filterOpt={filterOpt}
-            addLink="/admin/user/adduser"
+            filterOpt={userRole}
+            addLink='/admin/user/adduser'
             setLimit={setLimit}
           />
 
-          <div className="table-container">
+          <div className='table-container'>
             <table>
               <thead>
                 <tr>
@@ -130,15 +129,12 @@ const DUser = () => {
                         <td>{item.name}</td>
                         <td>{item.email}</td>
                         <td>{item.user_role}</td>
-                        <td>{item.user_role}</td>
                       </tr>
                       {showAction === i && (
                         <DocumentHandler
                           colSpan={4}
                           editpage={`/admin/user/edituser?id=${item.id}`}
-                          deleteHandler={() =>
-                            deleteUser(item.id, item.profile)
-                          }
+                          deleteHandler={() => deleteUser(item.id, item.image)}
                           loading={loading}
                         />
                       )}

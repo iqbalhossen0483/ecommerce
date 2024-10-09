@@ -62,48 +62,41 @@ const Addblog = () => {
 
   async function onsubmit(data) {
     if (!store.user) return;
-    setLoading(true);
     try {
-      data.body = body.current?.value;
-      data.user_id = store.user.id;
-      data.user_type = store.user.user_role;
-      if (!data.body) {
-        body.current?.focus();
-        return store?.setAlert({ msg: "Give the body info", type: "info" });
+      setLoading(true);
+      try {
+        data.body = body.current?.value;
+        data.user_id = store.user.id;
+        data.user_type = store.user.user_role;
+        if (!data.body) {
+          body.current?.focus();
+          return store?.setAlert({ msg: "Give the body info", type: "info" });
+        }
+        const res = await fetch("/api/blog", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        const result = await res.json();
+        if (res.ok) {
+          reset();
+          store?.setAlert({ msg: result.message, type: "success" });
+        } else throw result;
+      } catch (error) {
+        store?.setAlert({ msg: error.message, type: "error" });
       }
-      data.category_name = category?.find(
-        (item) => item.id == data.category_id
-      )?.name;
-      data.sub_category_name = subCategory?.find(
-        (item) => item.id == data.sub_category_id
-      )?.name;
-      data.pro_sub_name = prosub?.find(
-        (item) => item.id == data.pro_sub_id
-      )?.name;
-
-      const res = await fetch("/api/blog", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-      if (res.ok) {
-        reset();
-        store?.setAlert({ msg: result.message, type: "success" });
-      } else throw result;
-    } catch (error) {
-      store?.setAlert({ msg: error.message, type: "error" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
     <DashboardLayout>
       <div>
-        <PageInfo title="Blog" type="Add" icon={<FaBlogger />} />
-        <div className="add-form">
+        <PageInfo title='Blog' type='Add' icon={<FaBlogger />} />
+        <div className='add-form'>
           <form onSubmit={handleSubmit(onsubmit)}>
             <div>
               <label>Blog Title</label>
@@ -111,18 +104,18 @@ const Addblog = () => {
                 {...register("title", { required: true })}
                 required
                 rows={1}
-                placeholder="Blog Title"
+                placeholder='Blog Title'
               />
             </div>
             <div>
               <label>Product Category</label>
               <select
                 {...register("category_id", { required: true })}
-                className="w-full"
+                className='w-full'
                 required
                 onChange={(e) => handleSubCategory(e.target.value)}
               >
-                <option value="">select</option>
+                <option value=''>select</option>
                 {category &&
                   category.length &&
                   category.map((item) => (
@@ -137,10 +130,10 @@ const Addblog = () => {
               <select
                 {...register("sub_category_id", { required: showSub })}
                 onChange={(e) => handleProSub(e.target.value)}
-                className="w-full"
+                className='w-full'
                 required={showSub}
               >
-                <option value="">select</option>
+                <option value=''>select</option>
                 {showSub &&
                   showSub.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -154,10 +147,10 @@ const Addblog = () => {
               <label>Product Pro Sub Category</label>
               <select
                 {...register("pro_sub_id", { required: showProsub })}
-                className="w-full"
+                className='w-full'
                 required={showProsub}
               >
-                <option value="">select</option>
+                <option value=''>select</option>
                 {showProsub &&
                   showProsub.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -166,23 +159,23 @@ const Addblog = () => {
                   ))}
               </select>
             </div>
-            <div className="z-40">
+            <div className='z-40'>
               <label>Blog body</label>
-              <TextEditor editorRef={body} page="blog" />
+              <TextEditor editorRef={body} page='blog' />
             </div>
 
-            <div className="flex justify-between">
+            <div className='flex justify-between'>
               <button
                 disabled={loading}
-                type="submit"
-                className="btn active text-sm"
+                type='submit'
+                className='btn active text-sm'
               >
                 SAVE
               </button>
-              <Link href="/admin/home/faq">
+              <Link href='/admin/home/faq'>
                 <button
-                  type="button"
-                  className="btn text-sm"
+                  type='button'
+                  className='btn text-sm'
                   style={{ backgroundColor: "#dc3545", color: "#fff" }}
                 >
                   GO BACK

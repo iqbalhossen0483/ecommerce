@@ -29,23 +29,18 @@ export function getBlog(req, res) {
 }
 
 const FaqSchema = Joi.object({
-  title: Joi.string().max(400).required(),
+  title: Joi.string().max(100).required(),
   body: Joi.string().max(600).required(),
   user_id: Joi.number().integer().required(),
   user_type: Joi.string().required(),
-  created_at: Joi.date().required(),
   category_id: Joi.number().integer().required(),
-  category_name: Joi.string().required(),
   sub_category_id: Joi.number().integer(),
-  sub_category_name: Joi.string(),
   pro_sub_id: Joi.number().integer(),
-  pro_sub_name: Joi.string(),
 });
 
 export async function postBlog(req, res) {
   try {
     await varifyUser(req.body.user_id, req.body.user_type);
-    req.body.created_at = new Date();
     //api validateion;
     const varify = FaqSchema.validate(req.body);
     if (varify.error) throw { message: varify.error.message };

@@ -53,12 +53,18 @@ const Store = () => {
     }
   }
 
-  async function addOrEditData(url, formData, method) {
+  async function addOrEditData(url, data, method, formData = true) {
     try {
-      const res = await fetch(url, {
+      const option = {
         method: method,
-        body: formData,
-      });
+        body: data,
+      };
+      if (!formData) {
+        option.headers = { "content-type": "application/json" };
+        option.body = JSON.stringify(data);
+      }
+
+      const res = await fetch(url, option);
       const result = await res.json();
       if (res.ok) return { error: false, message: result.message };
       else throw result;

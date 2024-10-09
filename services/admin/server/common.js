@@ -18,7 +18,7 @@ export async function varifyOwner(user_id) {
 
     const sql = `SELECT id, user_role FROM user WHERE id = '${user_id}'`;
     const result = await queryDocument(sql);
-    if (!result.length || result[0].user_role !== "owner") {
+    if (!result.length || result[0].user_role !== "admin") {
       throw { message: "Forbidden", status: 409 };
     }
   } catch (error) {
@@ -38,7 +38,7 @@ export async function varifyUser(user_id, user_type) {
       sql = `SELECT id, user_role FROM user WHERE id = '${user_id}'`;
     }
     const result = await queryDocument(sql);
-    if (!result.length || !/owner|uploader|vendor/.test(result[0].user_role)) {
+    if (!result.length || !/admin|staff|vendor/.test(result[0].user_role)) {
       throw { message: "Forbidden", status: 409 };
     }
   } catch (error) {
@@ -105,7 +105,6 @@ export async function bodyParser(req, res, folder, images) {
 }
 
 export function errorHandler(res, error) {
-  console.log(error);
   res
     .status(error.status || 500)
     .send({ message: error.message || "Serverside error" });

@@ -21,13 +21,19 @@ export async function updateFooterPages(req, res) {
   try {
     await varifyOwner(req.body.user_id);
     delete req.body.user_id;
+    const existsql = `SELECT id FROM footer_pages WHERE name = '${req.query.name}'`;
+    const isExist = await queryDocument(existsql);
     const description = req.body.description.replace("'", "&#39;");
-    const data = `description = '${description}'`;
-    const sql = `UPDATE footer_pages SET ${data} WHERE name='${req.query.name}'`;
-    const result = await queryDocument(sql);
-    if (result.changedRows > 0) {
-      res.send({ message: `${req.query.name} Updated Successfully` });
-    } else throw { message: "No Update found" };
+
+    if (isExist.length) {
+      const data = `description = '${description}'`;
+      const sql = `UPDATE footer_pages SET ${data} WHERE name='${req.query.name}'`;
+      await queryDocument(sql);
+    } else {
+      const sql = `INSERT INTO footer_pages (name, description) VALUES ('${req.query.name}', '${description}')`;
+      await queryDocument(sql);
+    }
+    res.send({ message: `${req.query.name} Updated Successfully` });
   } catch (error) {
     errorHandler(res, error);
   }

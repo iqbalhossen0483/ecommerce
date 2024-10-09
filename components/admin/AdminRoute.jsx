@@ -13,11 +13,11 @@ const AdminRoute = ({ children }) => {
     if (!store.loading && !store.user) {
       router.push("/login");
       store.setRedirect("/admin");
-    } else if (!store.loading && /vendor|uploader/.test(store.user.user_role)) {
+    } else if (!store.loading && /vendor|staff/.test(store.user.user_role)) {
       if (!vendorRoute.test(router.pathname)) {
         router.push("/admin/product");
       } else setLoading(false);
-    } else if (!store.loading && store.user.user_role === "owner") {
+    } else if (!store.loading && store.user.user_role === "admin") {
       setLoading(false);
     }
   }, [store.loading, store.user, router.pathname]);

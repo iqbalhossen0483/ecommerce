@@ -22,7 +22,7 @@ export function getVandor(req, res) {
       const count = "SELECT COUNT(id) FROM vandor";
       getDataFromDB(res, sql, count);
     } else {
-      //send all category
+      //send all vandor
       const sql = "SELECT * FROM vandor";
       getDataFromDB(res, sql);
     }
@@ -36,24 +36,28 @@ const VandorSchema = Joi.object({
   email: Joi.string().email().required(),
   number: Joi.string().required(),
   shop_name: Joi.string().max(100).required(),
-  trad_liecence: Joi.number().required(),
+  trad_liecence: Joi.number(),
   shop_location: Joi.string().required(),
   password: Joi.string().min(6).required(),
   shop_logo: Joi.string(),
+  joined_at: Joi.date().required(),
 });
 
 export async function postVandor(req, res) {
   try {
     const img = [{ name: "shop_logo", maxCount: 1 }];
     const { error } = await bodyParser(req, res, "assets", img);
-    if (error) throw { message: "Error occured when parsing body" };
+    if (error) {
+      throw { message: "Error occured when image updlading" };
+    }
+
     await varifyOwner(req.body.user_id);
     delete req.body.user_id;
 
     //check is user exist;
     const query = `SELECT * FROM vandor WHERE email='${req.body.email}'`;
     const isExist = await queryDocument(query);
-    if (isExist.length) throw { message: "User already exist" };
+    if (isExist.length) throw { message: "Vandor already exist" };
 
     //no user, you procced;
     //api validateion;
@@ -62,7 +66,7 @@ export async function postVandor(req, res) {
     //hase password;
     const hashed = await bcrypt.hash(req.body.password, 10);
     req.body.password = hashed;
-    if (req.files.shop_logo) {
+    if (req.files?.shop_logo) {
       req.body.shop_logo = req.files.shop_logo[0].filename;
     } else delete req.body.shop_logo;
 
@@ -73,7 +77,7 @@ export async function postVandor(req, res) {
       res.send({ message: "Vandor Added Successfully" });
     } else throw { message: "Unable to Added" };
   } catch (error) {
-    if (req.files.shop_logo) {
+    if (req.files?.shop_logo) {
       deleteImage(req.files.shop_logo[0].filename);
     }
     errorHandler(res, error);
@@ -86,10 +90,11 @@ export async function deleteVandor(req, res) {
     if (error) throw { message: "Error occured when parsing body" };
     await varifyOwner(req.body.user_id);
     delete req.body.user_id;
+
     const sql = `DELETE FROM vandor WHERE id=${req.body.id}`;
     const result = await queryDocument(sql);
     if (result.affectedRows > 0) {
-      if (req.body.shop_logo) {
+      if (req.body.image) {
         deleteImage(req.body.image);
       }
       res.send({ message: "Deleted successfully" });
@@ -110,10 +115,22 @@ export async function updateVandor(req, res) {
       const hashed = await bcrypt.hash(req.body.password, 10);
       req.body.password = hashed;
     }
+    let existImage;
+    if (req.files?.shop_logo) {
+      req.body.shop_logo = req.files.shop_logo[0].filename;
+      existImage = req.body.deleteImage;
+      delete req.body.deleteImage;
+    } else delete req.body.shop_logo;
+
     const sql = `UPDATE vandor SET `;
     const option = `WHERE id=${req.query.id}`;
+    if (!Object.keys(req.body).length) {
+      throw { message: "No update found" };
+    }
+
     const result = await postDocument(sql, req.body, option);
     if (result.changedRows > 0) {
+      if (existImage) deleteImage(existImage);
       res.send({ message: "Vandor Updated Successfully" });
     } else throw { message: "Unable to Update, please try again" };
   } catch (error) {
